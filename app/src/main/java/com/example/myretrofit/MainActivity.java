@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
                 ParseAnnotation.parseGet();
 
                 new Retrofit().create(NetApi.class)
-                .getData()
+                .getData("101030100")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Response<ResponseData>>() {

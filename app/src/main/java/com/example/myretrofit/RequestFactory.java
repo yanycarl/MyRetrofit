@@ -21,12 +21,13 @@ public class RequestFactory {
 
     public static class Builder {
 
-        final Method method;
+        Method method;
         String httpMethod;
         public String baseUrl;
         String relativeUrl;
-        final Annotation[] methodAnnotations;
         Set<String> relativeUrlParamNames;
+
+        final Annotation[] methodAnnotations;
         final Annotation[][] parameterAnnotationsArray;
         final Type[] parameterTypes;
         ParameterHandler[] parameterHandlers;
@@ -51,12 +52,14 @@ public class RequestFactory {
             parameterHandlers = new ParameterHandler[parameterCount];
             for (int p = 0; p < parameterCount; p++) {
                 parameterHandlers[p] =
-                        parseParameter(parameterAnnotationsArray[p]);
+                        parseParameter(parameterAnnotationsArray[p],p);
             }
             return new RequestFactory(Builder.this);
         }
 
         private void parseMethodAnnotation(Annotation annotation) {
+            //TODO：各种方法，这里只举例GET方法
+
             if (annotation instanceof GET) {
                 parseHttpMethodAndPath("GET", ((GET) annotation).value(), false);
             }
@@ -91,24 +94,24 @@ public class RequestFactory {
             return patterns;
         }
 
-        private ParameterHandler parseParameter(Annotation[] annotations){
+        private ParameterHandler parseParameter(Annotation[] annotations, int position){
             if(annotations != null){
                 for (Annotation annotation : annotations) {
                     ParameterHandler annotationAction =
-                            parseParameterAnnotation(annotation);
+                            parseParameterAnnotation(annotation, position);
                     return annotationAction;
                 }
             }
             return null;
         }
 
-        private ParameterHandler parseParameterAnnotation(Annotation annotation) {
+        private ParameterHandler parseParameterAnnotation(Annotation annotation, int position) {
 
             //这里解析@Path的参数注解
             if (annotation instanceof Path) {
                 Path path = (Path) annotation;
                 String name = path.value();
-                return new ParameterHandler(name);
+                return new ParameterHandler(name, position,"Path");
             }
             else {
                 return null;

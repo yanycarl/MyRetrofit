@@ -25,7 +25,7 @@ public class Retrofit {
                     //TODO：在这里再判断有没有平台定义的函数
 
                     //按照ServiceMethod处理
-                    return loadServiceMethod(method).invoke(null);
+                    return loadServiceMethod(method).invoke(args);
                 }
         });
     }
